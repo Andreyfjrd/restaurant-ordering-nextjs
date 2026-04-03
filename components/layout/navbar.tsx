@@ -57,8 +57,10 @@ export function Navbar() {
             const isActive = activeSection === link.href.slice(1)
             return (
               <li key={link.href}>
-                <Link
-                  href={link.href}
+                <button
+                  onClick={() => {
+                    document.getElementById(link.href.slice(1))?.scrollIntoView({ behavior: 'smooth' })
+                  }}
                   className={`text-sm font-medium transition-colors relative ${
                     isActive
                       ? 'text-primary after:absolute after:bottom-[-4px] after:left-0 after:right-0 after:h-[2px] after:bg-primary after:rounded-full'
@@ -66,7 +68,7 @@ export function Navbar() {
                   }`}
                 >
                   {link.label}
-                </Link>
+                </button>
               </li>
             )
           })}
@@ -114,15 +116,17 @@ export function Navbar() {
               const isActive = activeSection === link.href.slice(1)
               return (
                 <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className={`block py-2 text-sm font-medium transition-colors ${
+                  <button
+                    className={`block w-full text-left py-2 text-sm font-medium transition-colors ${
                       isActive ? 'text-primary font-semibold' : 'text-muted-foreground hover:text-foreground'
                     }`}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={() => {
+                      document.getElementById(link.href.slice(1))?.scrollIntoView({ behavior: 'smooth' })
+                      setIsMobileMenuOpen(false)
+                    }}
                   >
                     {link.label}
-                  </Link>
+                  </button>
                 </li>
               )
             })}
