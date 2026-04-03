@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { Plus } from 'lucide-react'
+import { Plus, Minus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { menuItems } from '@/data/restaurant'
@@ -13,7 +13,7 @@ const categories = ['Todos', ...new Set(menuItems.map((item) => item.category))]
 
 export function Menu() {
   const [activeCategory, setActiveCategory] = useState('Todos')
-  const { addItem } = useCartContext()
+  const { addItem, items, updateQuantity } = useCartContext()
 
   const filteredItems =
     activeCategory === 'Todos'
@@ -76,15 +76,42 @@ export function Menu() {
                   <span className="text-lg font-bold text-primary">
                     {formatPrice(item.price)}
                   </span>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => addItem(item)}
-                    className="gap-1"
-                  >
-                    <Plus className="h-4 w-4" />
-                    Agregar
-                  </Button>
+                  {(() => {
+                    const cartItem = items.find((i) => i.id === item.id)
+                    return cartItem ? (
+                      <div className="flex items-center gap-1">
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="h-8 w-8"
+                          onClick={() => updateQuantity(item.id, cartItem.quantity - 1)}
+                        >
+                          <Minus className="h-4 w-4" />
+                        </Button>
+                        <span className="w-6 text-center font-semibold tabular-nums">
+                          {cartItem.quantity}
+                        </span>
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="h-8 w-8"
+                          onClick={() => addItem(item)}
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => addItem(item)}
+                        className="gap-1"
+                      >
+                        <Plus className="h-4 w-4" />
+                        Agregar
+                      </Button>
+                    )
+                  })()}
                 </div>
               </CardContent>
             </Card>
