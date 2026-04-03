@@ -23,22 +23,20 @@ export function Navbar() {
 
   useEffect(() => {
     const sectionIds = navLinks.map((l) => l.href.slice(1))
-    const observers: IntersectionObserver[] = []
 
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id)
-      if (!el) return
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) setActiveSection(id)
-        },
-        { rootMargin: '-50% 0px -50% 0px' }
-      )
-      observer.observe(el)
-      observers.push(observer)
-    })
+    const handleScroll = () => {
+      const navbarOffset = 80
+      let current = sectionIds[0]
+      for (const id of sectionIds) {
+        const el = document.getElementById(id)
+        if (el && el.getBoundingClientRect().top <= navbarOffset) current = id
+      }
+      setActiveSection(current)
+    }
 
-    return () => observers.forEach((o) => o.disconnect())
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   return (
@@ -54,15 +52,19 @@ export function Navbar() {
         {/* Desktop Navigation */}
         <ul className="hidden md:flex items-center gap-6">
           {navLinks.map((link) => {
-            const isActive = activeSection === link.href.slice(1)
+            const id = link.href.slice(1)
+            const isMenu = id === 'menu'
+            const isActive = !isMenu && activeSection === id
             return (
               <li key={link.href}>
                 <button
                   onClick={() => {
-                    document.getElementById(link.href.slice(1))?.scrollIntoView({ behavior: 'smooth' })
+                    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
                   }}
                   className={`text-sm font-medium transition-colors relative ${
-                    isActive
+                    isMenu
+                      ? 'text-primary after:absolute after:bottom-[-4px] after:left-0 after:right-0 after:h-[2px] after:bg-primary after:rounded-full'
+                      : isActive
                       ? 'text-primary after:absolute after:bottom-[-4px] after:left-0 after:right-0 after:h-[2px] after:bg-primary after:rounded-full'
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
@@ -113,7 +115,9 @@ export function Navbar() {
         <div className="md:hidden bg-card border-b border-border">
           <ul className="container mx-auto px-4 py-4 flex flex-col gap-2">
             {navLinks.map((link) => {
-              const isActive = activeSection === link.href.slice(1)
+              const id = link.href.slice(1)
+              const isMenu = id === 'menu'
+              const isActive = isMenu || activeSection === id
               return (
                 <li key={link.href}>
                   <button
@@ -121,7 +125,7 @@ export function Navbar() {
                       isActive ? 'text-primary font-semibold' : 'text-muted-foreground hover:text-foreground'
                     }`}
                     onClick={() => {
-                      document.getElementById(link.href.slice(1))?.scrollIntoView({ behavior: 'smooth' })
+                      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
                       setIsMobileMenuOpen(false)
                     }}
                   >

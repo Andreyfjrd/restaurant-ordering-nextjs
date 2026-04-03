@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
@@ -31,11 +33,11 @@ export function Hero() {
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Button
-            asChild
             size="lg"
             className="text-base px-6 sm:px-8"
+            onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })}
           >
-            <Link href="#menu">Ver Menú</Link>
+            Ver Menú
           </Button>
           <Button
             asChild
