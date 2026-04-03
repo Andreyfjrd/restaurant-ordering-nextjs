@@ -8,6 +8,7 @@ import { Gallery } from '@/components/sections/gallery'
 import { Location } from '@/components/sections/location'
 import { Contact } from '@/components/sections/contact'
 import { CartDrawer } from '@/components/cart/cart-drawer'
+import { CartFab } from '@/components/cart/cart-fab'
 import { ScrollToTop } from '@/components/ui/scroll-to-top'
 
 export default function HomePage() {
@@ -25,6 +26,7 @@ export default function HomePage() {
       </main>
       <Footer />
       <CartDrawer />
+      <CartFab />
       <ScrollToTop />
     </>
   )
